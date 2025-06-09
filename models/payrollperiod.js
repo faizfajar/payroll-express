@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
+      is_processed: DataTypes.BOOLEAN,
     },
     {
       sequelize,
