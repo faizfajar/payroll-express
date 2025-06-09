@@ -11,31 +11,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      attendance_date_in: {
+      attendance_date: {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
-      attendance_time_in: {
+      check_in: {
         type: Sequelize.TIME(6),
         allowNull: false,
       },
-      attendance_date_out: {
-        type: Sequelize.DATEONLY,
-        allowNull: true,
-      },
-      attendance_time_out: {
+      check_out: {
         type: Sequelize.TIME(6),
         allowNull: true,
       },
-      attendance_duration: {
-        type: Sequelize.TIME(6),
-        allowNull: true,
-      },
-      late_duration: {
-        type: Sequelize.TIME(6),
-        allowNull: true,
-      },
-      early_duration: {
+      duration: {
         type: Sequelize.TIME(6),
         allowNull: true,
       },

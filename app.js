@@ -13,6 +13,7 @@ const payrollPeriodEmployeeRoutes = require("./routes/payrollPeriodEmployeeRoute
 const scheduleRoutes = require("./routes/scheduleRoutes");
 const overtimeRoutes = require("./routes/overtimeRoutes");
 const reimbursementRoutes = require("./routes/reimbursementRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
@@ -23,6 +24,7 @@ app.use("/api/payroll-period-employees", payrollPeriodEmployeeRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/overtimes", overtimeRoutes);
 app.use("/api/reimbursement", reimbursementRoutes);
+app.use("/api/attendances", attendanceRoutes);
 
 
 app.use(errorHandler);
