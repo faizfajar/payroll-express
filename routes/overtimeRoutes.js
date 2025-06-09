@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const overtimeController = require("../controllers/overtimeController");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 router.use(authMiddleware);
 

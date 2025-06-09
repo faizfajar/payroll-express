@@ -23,6 +23,11 @@ module.exports = {
       employee_email: Sequelize.STRING,
       // password: Sequelize.STRING,
       gender: Sequelize.INTEGER,
+      salary: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       // role: Sequelize.STRING,
       created_at: {
         type: Sequelize.DATE,

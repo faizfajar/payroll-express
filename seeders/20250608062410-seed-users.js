@@ -14,6 +14,7 @@ module.exports = {
         username: `employee${i}`,
         password: passwordHash,
         role: "employee",
+        emp_id: i,
         createdAt: new Date(),
         updatedAt: new Date(),
       });

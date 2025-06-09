@@ -9,6 +9,7 @@ module.exports = {
 
     for (let i = 1; i <= 100; i++) {
       const gender = faker.datatype.boolean() ? 0 : 1; // 0 = male, 1 = female
+      const randomSalary = faker.number.int({ min: 100000, max: 1000000 });
       // const passwordHash = await bcrypt.hash("password", 10);
 
       employees.push({
@@ -19,6 +20,7 @@ module.exports = {
         employee_email: `employee${i}@example.com`,
         // password: passwordHash,
         gender,
+        salary: randomSalary,
         // role: "employee",
         // created_at: new Date(),
         // updated_at: new Date(),
