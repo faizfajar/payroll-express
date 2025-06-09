@@ -12,11 +12,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "payroll_period", // nama tabel yang direferensi
-          key: "id", // kolom primary key di tabel tersebut
+          model: "payroll_period",
+          key: "id",
         },
-        onUpdate: "CASCADE", // opsi jika key diupdate
-        onDelete: "CASCADE", // opsi jika data induk dihapus
+        onUpdate: "CASCADE", 
+        onDelete: "SET NULL", 
       },
       emp_id: {
         type: Sequelize.INTEGER,
