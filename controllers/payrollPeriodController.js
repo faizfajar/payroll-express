@@ -16,7 +16,7 @@ module.exports = {
     }
   },
 
-  async show(req, res) {
+  async getById(req, res) {
     try {
       const data = await PayrollPeriod.findByPk(req.params.id);
       if (!data) return response.notFound(res, "Payroll period not found");
@@ -32,11 +32,17 @@ module.exports = {
 
   async create(req, res) {
     try {
-      const { period_name, start_date, end_date } = req.body;
+      const { period_name, type, start_date, finish_date } = req.body;
+      
+      if(!period_name || !type || !start_date || !finish_date){
+        response.validationError(res, "Period Name, Start Date and End Date is required")
+      }
+
       const data = await PayrollPeriod.create({
         period_name,
+        type,
         start_date,
-        end_date,
+        finish_date,
         created_at: new Date(),
         updated_at: new Date(),
       });
@@ -57,11 +63,15 @@ module.exports = {
       const data = await PayrollPeriod.findByPk(req.params.id);
       if (!data) return response.notFound(res, "Payroll period not found");
 
-      const { period_name, start_date, end_date } = req.body;
+      const { period_name, type,  start_date, finish_date } = req.body;
+      if(!period_name || !type || !start_date || !finish_date){
+        response.validationError(res, "Period Name, Start Date and End Date is required")
+      }
       await data.update({
         period_name,
+        type,
         start_date,
-        end_date,
+        finish_date,
         updated_at: new Date(),
       });
 
@@ -71,7 +81,7 @@ module.exports = {
     }
   },
 
-  async destroy(req, res) {
+  async delete(req, res) {
     try {
       const data = await PayrollPeriod.findByPk(req.params.id);
       if (!data) return response.notFound(res, "Payroll period not found");

@@ -6,9 +6,9 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 router.use(authMiddleware);
 
 router.get("/", payrollPeriodController.index);
-router.get("/:id", payrollPeriodController.show);
+router.get("/:id", payrollPeriodController.getById);
 router.post("/", payrollPeriodController.create);
 router.put("/:id", payrollPeriodController.update);
-router.delete("/:id", payrollPeriodController.destroy);
+router.delete("/:id", payrollPeriodController.delete);
 
 module.exports = router;

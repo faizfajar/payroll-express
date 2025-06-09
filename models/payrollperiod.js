@@ -17,13 +17,26 @@ module.exports = (sequelize, DataTypes) => {
       period_name: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      start_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      finish_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: "PayrollPeriod",
       tableName: "payroll_period",
-      timestamps: true,
+      timestamps: false,
+      underscored: true,
     }
   );
 
