@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       start_time: {
-        type: DataTypes.TIME, // atau DataTypes.STRING sesuai kebutuhan
+        type: DataTypes.TIME,
         allowNull: false,
       },
       finish_time: {

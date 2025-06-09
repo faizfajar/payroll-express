@@ -7,7 +7,7 @@ module.exports = {
       const employees = await Employee.findAll({
         include: {
           model: Schedule,
-          as: "schedule", // ini penting! Harus sesuai alias
+          as: "schedule",
         },
       });
       return response.success(

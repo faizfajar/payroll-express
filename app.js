@@ -13,9 +13,6 @@ const scheduleRoutes = require("./routes/scheduleRoutes");
 const overtimeRoutes = require("./routes/overtimeRoutes");
 const reimbursementRoutes = require("./routes/reimbursementRoutes");
 
-// Gunakan route /schedules
-
-
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 // data 

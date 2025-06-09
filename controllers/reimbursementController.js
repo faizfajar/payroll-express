@@ -78,11 +78,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, description, ammount } = req.body;
-      console.log('====================================');
-      console.log(!emp_id, description, ammount);
-      console.log('====================================');
-      
-      
 
       if (!emp_id || !ammount && ammount != 0) {
         return response.validationError(
@@ -126,7 +121,7 @@ module.exports = {
 
       const reimbursement = await Reimbursement.findByPk(id);
       if (!reimbursement)
-        return response.notFound(res, "Reimbursement not found");
+      return response.notFound(res, "Reimbursement not found");
 
       await reimbursement.update({ emp_id, description, ammount });
 

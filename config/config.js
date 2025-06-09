@@ -1,4 +1,4 @@
-require("dotenv").config(); // pastikan ini diinstall
+require("dotenv").config();
 
 module.exports = {
   development: {
