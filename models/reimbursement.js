@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      reimbursement_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+      },
     },
     {
       sequelize,

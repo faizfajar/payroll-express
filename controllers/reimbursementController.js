@@ -77,12 +77,12 @@ module.exports = {
 
   async create(req, res) {
     try {
-      const { emp_id, description, ammount } = req.body;
+      const { emp_id, description, ammount, reimbursement_date } = req.body;
 
-      if (!emp_id || !ammount && ammount != 0) {
+      if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
           res,
-          "Employee ID and Ammount are required"
+          "Employee ID, Reimbursement Date and Ammount are required"
         );
       }
 
@@ -90,6 +90,7 @@ module.exports = {
         emp_id,
         description,
         ammount,
+        reimbursement_date,
       });
 
       return response.success(
@@ -110,12 +111,12 @@ module.exports = {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const { emp_id, description, ammount } = req.body;
+      const { emp_id, description, ammount, reimbursement_date } = req.body;
 
-      if (!emp_id || (!ammount && ammount != 0)) {
+      if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
           res,
-          "Employee ID and Ammount are required"
+          "Employee ID, Reimbursement Date and Ammount are required"
         );
       }
 
@@ -123,7 +124,12 @@ module.exports = {
       if (!reimbursement)
       return response.notFound(res, "Reimbursement not found");
 
-      await reimbursement.update({ emp_id, description, ammount });
+      await reimbursement.update({
+        emp_id,
+        description,
+        ammount,
+        reimbursement_date,
+      });
 
       return response.success(
         res,
