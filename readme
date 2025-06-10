@@ -1,2 +1,96 @@
-npx sequelize-cli db:migrate
-npx sequelize-cli db:seed:all
+# 🧾 PT Deals - Backend Engineer Case Study
+
+## 📌 Overview
+
+Proyek ini adalah simulasi sistem penggajian (payslip) yang melibatkan komponen attendance,lembur, dan reimbursement untuk para karyawan. Sistem ini dapat digunakan untuk:
+- Menentukan periode payroll untuk penggajian monthly/annualy
+- Mencatat kehadiran dan lembur karyawan
+- Mengajukan klaim reimbursement
+- Menghasilkan payslip dan laporan rekap admin
+
+## 🏗️ Tech Stack
+
+- **Backend**: Node.js
+- **Database**: PostgreSQL
+- **Testing**: Jest, Postman
+- **Data Format**: JSON over HTTP API
+
+---
+
+## 🧰 Features Checklist
+
+| Feature | Deskripsi | Status |
+
+- Seed 101 fake users | Data awal untuk testing, 100 karyawan 1 admin. | ✅
+- Seed 100 fake karyawan | Data karyawan | ✅
+- Payroll Period | Admin/karyawan input date, start_time & finish_time payroll | ✅
+- Attendance submission | Karyawan submit kehadiran (hanya hari kerja) | ✅
+- Reimbursement | Karyawan ajukan reimbursement | ✅
+- Lembur | Karyawan ajukan lembur | ✅
+- Process Payroll | Admin proses payroll (satu kali per payrol-periode) | ✅
+- karyawan payslip | Breakdown attendance, lembur, reimbursement | ✅ 
+- Admin summary | Ringkasan semua take-home pay | ✅ 
+
+---
+
+## 🔐 Authentication
+
+Gunakan login sederhana (username & password) menggunakan session/token-based auth (misalnya JWT atau session cookie).  
+
+Roles:
+- **Admin**
+- **karyawan**
+
+---
+
+## 🚦 Step-by-Step Setup
+
+### 1. Clone Project
+```bash
+git clone https://github.com/username/pt-deals-case-study.git
+cd pt-deals-case-study
+
+## 🚦 Step-by-Step testing
+1. 
+
+
+#  via jest.
+- npm run test -> ini untuk menjalankan seluruh file .test
+- npm run test {filename} -> ini untuk menjalankan spesifik file .test. example = npm run test overtime -> ini akan menjalankan hanya file overtime
+
+
+# via postman.
+
+# import file postman with filename
+# Deals - Payroll System Docs.postman_collection -> v2.1
+
+# payroll-period
+# disclaimer, username yang bisa dugnakan adalah : 
+
+# username : admin // password : admin
+# username : employee1 sampai employee100 // password : password
+
+1. login menggunakan username dan password yang sudah di generate. setelah berhasil, copy token dari response json lalu klik folder postman, dan masukan dalam deafult value variable dengan key TOKEN 
+
+2. membuat data payroll-period, default saya sudah buatkan 1 seeder. payroll-period ini bertujuan untuk master data period, jadi nanti admin dapat memilih payroll-period yang mau di jalankan.
+
+# payroll-period-karyawan
+3. membuat data payroll-period-karyawan, defaultnya kosong karena asumsi saya berapa banyak karyawan yang ingin dijalankan sesuai keinginan pengujinya. data ini bertujuan untuk mapping data karyawan didalam payroll-period tertentu.
+
+# optional
+# schedule ini adalah asumsikan menjadi shift pegawainya. jika ingin menambahkan shift baru diperbolehkan, setelah menambah lakukan update pada karyawan tertentu sesuaikan menggunakan id schedule yang baru dibuat. ini bertujuan untuk validasi pengajuan lembur tidak boleh melewati jam kerja per masing" karyawan.
+4. membuat data schedule. default sudah saya buatkan 1 seeder untuk semua data karyawan, yaitu 09:00 - 17:00
+
+# lembur
+5. pengajuan lembur karyawan, input tanggal pengajuan lembur, start  dan finish time lembur. durasi akan otomatis di hitung apabila start dan finish_time tidak kosong.
+
+# rembes
+6. pengajuan reimbursement karyawan, input tanggal pengajuan reimbursement, nominal serta deskripsi.
+
+7. pengajuan absensi karyawan, tidak dapat di hari weekend. absensi 2x didalam hari yang sama tetap hanya di itung 1x pada saat proses gajian ( Process Payroll )
+
+8. proses payroll dengan payrol-period tertentu. ini akan generate data payroll karyawan, seperti : total_overtime, total_reimbursement, total_attendance_days, base_salary, salary. salary yang dihutung adalah prorated salary dari jumlah kehadiran karyawan
+
+9. generate payslip employee berdasarkan period tertentu, ini otomatis menampilkan data karwayan yang sedang login.
+
+10. generate summary payslip employee berdasarkan period tertentu ( hanya admin role diperbolehkan ). 
