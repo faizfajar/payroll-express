@@ -10,12 +10,6 @@ module.exports = {
       sce_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "schedules",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
       employee_code: Sequelize.STRING,
       employee_first_name: Sequelize.STRING,
