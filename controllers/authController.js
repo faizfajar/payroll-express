@@ -7,18 +7,30 @@ exports.login = async (req, res) => {
 
   try {
     const user = await User.findOne({ where: { username } });
-    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Gunakan 401 untuk semua kesalahan autentikasi agar tidak bocor informasi
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "Invalid credentials" });
+    if (!match) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const token = jwt.sign(
-      { id: user.id, name: user.name, role: user.role, username: user.username, emp_id: user.emp_id },
+      {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        username: user.username,
+        emp_id: user.emp_id,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.json({
+    return res.status(200).json({
       token,
       name: user.name,
       role: user.role,
@@ -26,7 +38,6 @@ exports.login = async (req, res) => {
       username: user.username,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Login error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
