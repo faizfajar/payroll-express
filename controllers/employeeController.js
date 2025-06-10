@@ -1,5 +1,6 @@
 const { Employee, Schedule } = require("../models"); // pastikan Schedule sudah diimport
 const response = require("../helpers/response");
+const logAudit = require("../helpers/auditLogger");
 
 module.exports = {
   async index(req, res) {
@@ -57,6 +58,15 @@ module.exports = {
         created_by: req.user.emp_id,
         ip_address: ipAddress,
       });
+
+      await logAudit({
+        table: "employees",
+        record_id: employee.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Employee created successfully",
@@ -93,6 +103,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "employees",
+        record_id: employee.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Employee updated successfully", employee);
     } catch (err) {
       console.error(err);
@@ -107,6 +125,13 @@ module.exports = {
       if (!employee) return response.notFound(res, "Employee not found");
 
       await employee.destroy();
+      await logAudit({
+        table: "employees",
+        record_id: id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
       return response.success(res, "Employee deleted successfully", null);
     } catch (err) {
       console.error(err);

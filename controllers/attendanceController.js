@@ -2,6 +2,7 @@ const { Attendance, Employee } = require("../models");
 const response = require("../helpers/response");
 const dayjs = require("dayjs");
 const { Op } = require("sequelize");
+const logAudit = require("../helpers/auditLogger");
 
 function calculateDuration(checkIn, checkOut) {
   if (!checkIn || !checkOut) return null;
@@ -143,6 +144,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "attendance",
+        record_id: data.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Attendance recorded successfully",
@@ -188,6 +197,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "attendance",
+        record_id: data.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Attendance updated successfully", data);
     } catch (err) {
       console.error(err);
@@ -203,6 +220,14 @@ module.exports = {
       if (!data) return response.notFound(res, "Attendance not found");
 
       await data.destroy();
+
+      await logAudit({
+        table: "attendance",
+        record_id: id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
       return response.success(res, "Attendance deleted successfully");
     } catch (err) {
       console.error(err);

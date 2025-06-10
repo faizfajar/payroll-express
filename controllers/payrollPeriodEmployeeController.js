@@ -104,6 +104,14 @@ module.exports = {
 
       const data = await PayrollPeriodEmployee.bulkCreate(records);
 
+      await logAudit({
+        table: "payroll_period_employee",
+        record_id: data.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Data created successfully", data, 201);
     } catch (err) {
       console.error(err);
@@ -144,6 +152,14 @@ module.exports = {
 
       const created = await PayrollPeriodEmployee.bulkCreate(newMappings);
 
+      await logAudit({
+        table: "payroll_period_employee",
+        record_id: created.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Payroll period employees updated successfully",
@@ -165,6 +181,14 @@ module.exports = {
       }
 
       await data.destroy();
+
+      await logAudit({
+        table: "payroll_period_employee",
+        record_id: data.id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
       return response.success(
         res,
         "Payroll period employee deleted successfully"

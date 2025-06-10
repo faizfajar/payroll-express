@@ -123,6 +123,14 @@ const runPayroll = async (req, res) => {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "overtime",
+        record_id: payslip.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       payslipData.push(payslip);
     }
 

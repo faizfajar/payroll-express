@@ -174,6 +174,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "overtime",
+        record_id: overtime.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Overtime created successfully",
@@ -273,6 +281,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "overtime",
+        record_id: overtime.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Overtime updated successfully", overtime);
     } catch (err) {
       console.error(err);
@@ -288,6 +304,14 @@ module.exports = {
       if (!overtime) return response.notFound(res, "Overtime not found");
 
       await overtime.destroy();
+
+      await logAudit({
+        table: "overtime",
+        record_id: id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
       return response.success(res, "Overtime deleted successfully");
     } catch (err) {
       console.error(err);

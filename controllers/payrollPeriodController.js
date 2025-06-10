@@ -51,6 +51,15 @@ module.exports = {
         created_by: req.user.emp_id,
         ip_address: ipAddress,
       });
+
+      await logAudit({
+        table: "payroll_period",
+        record_id: data.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Payroll period created successfully",
@@ -86,6 +95,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "payroll_period",
+        record_id: data.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Payroll period updated successfully", data);
     } catch (err) {
       return response.error(res, "Failed to update payroll period");
@@ -98,6 +115,15 @@ module.exports = {
       if (!data) return response.notFound(res, "Payroll period not found");
 
       await data.destroy();
+
+      await logAudit({
+        table: "payroll_period",
+        record_id: req.params.id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Payroll period deleted successfully",

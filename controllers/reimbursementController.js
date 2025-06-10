@@ -96,6 +96,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "reimbursements",
+        record_id: reimbursement.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Reimbursement created successfully",
@@ -138,6 +146,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "reimbursements",
+        record_id: reimbursement.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Reimbursement updated successfully",
@@ -161,6 +177,14 @@ module.exports = {
         return response.notFound(res, "Reimbursement not found");
 
       await reimbursement.destroy();
+
+      await logAudit({
+        table: "reimbursements",
+        record_id: id,
+        action: "delete",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
 
       return response.success(res, "Reimbursement deleted successfully");
     } catch (err) {

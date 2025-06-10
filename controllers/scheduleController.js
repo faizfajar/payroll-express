@@ -49,6 +49,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "schedule",
+        record_id: schedule.id,
+        action: "create",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(
         res,
         "Schedule created successfully",
@@ -79,6 +87,14 @@ module.exports = {
         ip_address: ipAddress,
       });
 
+      await logAudit({
+        table: "schedule",
+        record_id: schedule.id,
+        action: "update",
+        user_id: req.user.id,
+        request_id: req.request_id,
+      });
+
       return response.success(res, "Schedule updated successfully", schedule);
     } catch (err) {
       console.error(err);
@@ -94,6 +110,15 @@ module.exports = {
       if (!schedule) return response.notFound(res, "Schedule not found");
 
       await schedule.destroy();
+
+      await logAudit({
+        table: "schedule",
+        record_id: id,
+        action: "delete",
+        user_id: req.user.id,
+        // request_id: req.request_id,
+        // 
+      });
       return response.success(res, "Schedule deleted successfully", null);
     } catch (err) {
       console.error(err);
