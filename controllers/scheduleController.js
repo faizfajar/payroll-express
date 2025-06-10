@@ -1,6 +1,14 @@
 const { Schedule } = require("../models");
 const response = require("../helpers/response");
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -32,7 +40,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { schedule_name, start_time, finish_time } = req.body;
-       
 
       if (!schedule_name || !start_time || !finish_time) {
         return response.validationError(
@@ -41,21 +48,17 @@ module.exports = {
         );
       }
 
-      const schedule = await Schedule.create({
-        schedule_name,
-        start_time,
-        finish_time,
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "schedule",
-        record_id: schedule.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      const schedule = await Schedule.create(
+        {
+          schedule_name,
+          start_time,
+          finish_time,
+          created_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+        }
+      );
 
       return response.success(
         res,
@@ -73,27 +76,22 @@ module.exports = {
     try {
       const { id } = req.params;
       const { schedule_name, start_time, finish_time } = req.body;
-       
 
       const schedule = await Schedule.findByPk(id);
       if (!schedule) return response.notFound(res, "Schedule not found");
 
-      await schedule.update({
-        schedule_name,
-        start_time,
-        finish_time,
-        updated_at: new Date(),
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "schedule",
-        record_id: schedule.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await schedule.update(
+        {
+          schedule_name,
+          start_time,
+          finish_time,
+          updated_at: new Date(),
+          updated_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+        }
+      );
 
       return response.success(res, "Schedule updated successfully", schedule);
     } catch (err) {
@@ -109,15 +107,9 @@ module.exports = {
       const schedule = await Schedule.findByPk(id);
       if (!schedule) return response.notFound(res, "Schedule not found");
 
-      await schedule.destroy();
-
-      await logAudit({
-        table: "schedule",
-        record_id: id,
-        action: "delete",
-        user_id: req.user.id,
-        // request_id: req.request_id,
-        // 
+      await schedule.destroy({
+        where: {},
+        ...getRequestContext(req),
       });
       return response.success(res, "Schedule deleted successfully", null);
     } catch (err) {

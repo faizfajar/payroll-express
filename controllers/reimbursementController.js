@@ -1,6 +1,14 @@
 const { Reimbursement, Employee } = require("../models");
 const response = require("../helpers/response");
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -78,7 +86,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, description, ammount, reimbursement_date } = req.body;
-       
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -87,22 +94,18 @@ module.exports = {
         );
       }
 
-      const reimbursement = await Reimbursement.create({
-        emp_id,
-        description,
-        ammount,
-        reimbursement_date,
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "reimbursements",
-        record_id: reimbursement.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      const reimbursement = await Reimbursement.create(
+        {
+          emp_id,
+          description,
+          ammount,
+          reimbursement_date,
+          created_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+        }
+      );
 
       return response.success(
         res,
@@ -123,7 +126,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const { emp_id, description, ammount, reimbursement_date } = req.body;
-       
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -136,23 +138,19 @@ module.exports = {
       if (!reimbursement)
         return response.notFound(res, "Reimbursement not found");
 
-      await reimbursement.update({
-        emp_id,
-        description,
-        ammount,
-        reimbursement_date,
-        updated_at: new Date(),
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "reimbursements",
-        record_id: reimbursement.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await reimbursement.update(
+        {
+          emp_id,
+          description,
+          ammount,
+          reimbursement_date,
+          updated_at: new Date(),
+          updated_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+        }
+      );
 
       return response.success(
         res,
@@ -176,15 +174,7 @@ module.exports = {
       if (!reimbursement)
         return response.notFound(res, "Reimbursement not found");
 
-      await reimbursement.destroy();
-
-      await logAudit({
-        table: "reimbursements",
-        record_id: id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await reimbursement.destroy({ where: {}, ...getRequestContext(req) });
 
       return response.success(res, "Reimbursement deleted successfully");
     } catch (err) {

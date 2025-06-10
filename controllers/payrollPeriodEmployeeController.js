@@ -3,6 +3,14 @@
 const { PayrollPeriodEmployee, Employee, PayrollPeriod } = require("../models");
 const response = require("../helpers/response");
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -79,7 +87,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { ppr_id, emp_id } = req.body;
-       
 
       // set empId to array if params is string
       let empIds = emp_id;
@@ -99,17 +106,11 @@ module.exports = {
         ppr_id,
         emp_id,
         created_by: req.user.emp_id,
-         
       }));
 
-      const data = await PayrollPeriodEmployee.bulkCreate(records);
-
-      await logAudit({
-        table: "payroll_period_employee",
-        record_id: data.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
+      const data = await PayrollPeriodEmployee.bulkCreate(records, {
+        ...getRequestContext(req),
+        individualHooks: true,
       });
 
       return response.success(res, "Data created successfully", data, 201);
@@ -123,7 +124,6 @@ module.exports = {
     try {
       const { ppr_id } = req.params;
       const { emp_id } = req.body;
-       
 
       if (!ppr_id) {
         return response.validationError(res, "Payroll Period ID is required");
@@ -139,7 +139,11 @@ module.exports = {
       const employeeIds = Array.isArray(emp_id) ? emp_id : [emp_id];
 
       // Delete existing mappings for this period
-      await PayrollPeriodEmployee.destroy({ where: { ppr_id } });
+      await PayrollPeriodEmployee.destroy({
+        where: { ppr_id },
+        ...getRequestContext(req),
+        individualHooks: true,
+      });
 
       // Create new mappings
       const newMappings = employeeIds.map((id) => ({
@@ -147,17 +151,11 @@ module.exports = {
         emp_id: id,
         created_by: req.user.emp_id,
         updated_by: req.user.emp_id,
-         
       }));
 
-      const created = await PayrollPeriodEmployee.bulkCreate(newMappings);
-
-      await logAudit({
-        table: "payroll_period_employee",
-        record_id: created.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
+      const created = await PayrollPeriodEmployee.bulkCreate(newMappings, {
+        ...getRequestContext(req),
+        individualHooks: true,
       });
 
       return response.success(
@@ -180,7 +178,7 @@ module.exports = {
         return response.notFound(res, "Payroll period employee not found");
       }
 
-      await data.destroy();
+      await data.destroy({ where: {}, ...getRequestContext(req) });
 
       await logAudit({
         table: "payroll_period_employee",

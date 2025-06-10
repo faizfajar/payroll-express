@@ -29,6 +29,7 @@ app.set("trust proxy", true);
 
 // Assign request_id and clientIp for every request
 app.use((req, res, next) => {
+  req.client_ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
   req.request_id = uuidv4();
   next();
 });
@@ -36,7 +37,7 @@ app.use((req, res, next) => {
 // Optional logging middleware
 app.use((req, res, next) => {
   console.log(
-    `[${req.request_id}] ${req.method} ${req.originalUrl}`
+    `[${req.request_id}] ${req.method} ${req.originalUrl} from ${req.clientIp}`
   );
   next();
 });
@@ -51,7 +52,7 @@ app.use("/api/payroll-periods", payrollPeriodRoutes);
 app.use("/api/payroll-period-employees", payrollPeriodEmployeeRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/overtimes", overtimeRoutes);
-app.use("/api/reimbursements", reimbursementRoutes); // plural
+app.use("/api/reimbursement", reimbursementRoutes); // plural
 app.use("/api/attendances", attendanceRoutes);
 app.use("/api/payroll", payrollRoutes);
 

@@ -1,6 +1,13 @@
-const { Employee, Schedule } = require("../models"); // pastikan Schedule sudah diimport
+const { Employee, Schedule } = require("../models");
 const response = require("../helpers/response");
-const logAudit = require("../helpers/auditLogger");
+
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
 
 module.exports = {
   async index(req, res) {
@@ -43,7 +50,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { sce_id } = req.body;
-       
 
       if (!sce_id) {
         return response.validationError(
@@ -56,15 +62,8 @@ module.exports = {
       const employee = await Employee.create({
         ...req.body,
         created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "employees",
-        record_id: employee.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
+      },{
+        ...getRequestContext(req)
       });
 
       return response.success(
@@ -97,19 +96,15 @@ module.exports = {
         return response.validationError(res, "Schedule tidak ditemukan");
       }
 
-      await employee.update({
-        ...req.body,
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "employees",
-        record_id: employee.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await employee.update(
+        {
+          ...req.body,
+          updated_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+        }
+      );
 
       return response.success(res, "Employee updated successfully", employee);
     } catch (err) {
@@ -123,14 +118,9 @@ module.exports = {
       const { id } = req.params;
       const employee = await Employee.findByPk(id);
       if (!employee) return response.notFound(res, "Employee not found");
-
-      await employee.destroy();
-      await logAudit({
-        table: "employees",
-        record_id: id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
+      await employee.destroy({
+        where: {},
+        ...getRequestContext(req),
       });
       return response.success(res, "Employee deleted successfully", null);
     } catch (err) {

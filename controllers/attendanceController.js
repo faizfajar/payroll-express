@@ -22,6 +22,14 @@ function calculateDuration(checkIn, checkOut) {
   return `${hours}:${minutes}:00`;
 }
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -113,7 +121,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, attendance_date, check_in, check_out } = req.body;
-       
 
       if (!emp_id || !attendance_date) {
         return response.validationError(
@@ -134,23 +141,17 @@ module.exports = {
       // calculate duration when start & finish date is exists
       const duration = calculateDuration(check_in, check_out);
 
-      const data = await Attendance.create({
-        emp_id,
-        attendance_date,
-        check_in,
-        check_out,
-        duration,
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "attendance",
-        record_id: data.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      const data = await Attendance.create(
+        {
+          emp_id,
+          attendance_date,
+          check_in,
+          check_out,
+          duration,
+          created_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(
         res,
@@ -168,7 +169,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const { attendance_date, check_in, check_out } = req.body;
-       
 
       const data = await Attendance.findByPk(id);
       if (!data) return response.notFound(res, "Attendance not found");
@@ -188,22 +188,16 @@ module.exports = {
         check_out ?? data.check_out
       );
 
-      await data.update({
-        attendance_date,
-        check_in: check_in ?? data.check_in,
-        check_out: check_out ?? data.check_out,
-        duration,
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "attendance",
-        record_id: data.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await data.update(
+        {
+          attendance_date,
+          check_in: check_in ?? data.check_in,
+          check_out: check_out ?? data.check_out,
+          duration,
+          updated_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(res, "Attendance updated successfully", data);
     } catch (err) {
@@ -219,15 +213,8 @@ module.exports = {
 
       if (!data) return response.notFound(res, "Attendance not found");
 
-      await data.destroy();
+      await data.destroy({ where: {}, ...getRequestContext(req) });
 
-      await logAudit({
-        table: "attendance",
-        record_id: id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
       return response.success(res, "Attendance deleted successfully");
     } catch (err) {
       console.error(err);

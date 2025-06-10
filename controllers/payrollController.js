@@ -13,6 +13,14 @@ const dayjs = require("dayjs");
 const durationPlugin = require("dayjs/plugin/duration");
 dayjs.extend(durationPlugin);
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 const runPayroll = async (req, res) => {
   try {
     const { ppr_id } = req.body;
@@ -106,31 +114,27 @@ const runPayroll = async (req, res) => {
       );
 
       // insert payslip
-      const payslip = await Payroll.create({
-        emp_id,
-        ppr_id,
-        days_present: daysPresent,
-        total_overtime_hours: totalOvertimeHours,
-        total_reimbursement: totalReimbursement,
-        base_salary: baseSalary,
-        total_salary: totalTakeHome,
-        breakdown: {
-          attendancePay,
-          overtimePay,
-          reimbursement: totalReimbursement,
+      const payslip = await Payroll.create(
+        {
+          emp_id,
+          ppr_id,
+          days_present: daysPresent,
+          total_overtime_hours: totalOvertimeHours,
+          total_reimbursement: totalReimbursement,
+          base_salary: baseSalary,
+          total_salary: totalTakeHome,
+          breakdown: {
+            attendancePay,
+            overtimePay,
+            reimbursement: totalReimbursement,
+          },
+          created_by: req.user.emp_id,
         },
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "overtime",
-        record_id: payslip.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
-
+        {
+          ...getRequestContext(req),
+          individualHooks: true,
+        }
+      );
       payslipData.push(payslip);
     }
 

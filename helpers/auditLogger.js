@@ -6,6 +6,7 @@ module.exports = async function logAudit({
   action,
   user_id,
   request_id,
+  ip_address
 }) {
   await AuditLog.create({
     table_name: table,
@@ -13,5 +14,6 @@ module.exports = async function logAudit({
     action,
     performed_by: user_id,
     request_id,
+    ip_address
   });
 };

@@ -6,6 +6,15 @@ const { Op } = require("sequelize");
 const overtime = require("../models/overtime");
 
 dayjs.extend(utc);
+
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -89,7 +98,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, overtime_date, start_time, finish_time } = req.body;
-       
 
       if (!emp_id || !overtime_date || !start_time || !finish_time) {
         return response.validationError(
@@ -164,23 +172,17 @@ module.exports = {
 
       const durationStr = dayjs.utc(durationMs).format("HH:mm:ss");
 
-      const overtime = await Overtime.create({
-        emp_id,
-        overtime_date,
-        start_time,
-        finish_time,
-        duration: durationStr,
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "overtime",
-        record_id: overtime.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      const overtime = await Overtime.create(
+        {
+          emp_id,
+          overtime_date,
+          start_time,
+          finish_time,
+          duration: durationStr,
+          created_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(
         res,
@@ -198,7 +200,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const { emp_id, overtime_date, start_time, finish_time } = req.body;
-       
 
       if (!emp_id || !overtime_date || !start_time || !finish_time) {
         return response.validationError(
@@ -271,23 +272,17 @@ module.exports = {
 
       const durationStr = dayjs.utc(durationMs).format("HH:mm:ss");
 
-      await overtime.update({
-        emp_id,
-        overtime_date,
-        start_time,
-        finish_time,
-        duration: durationStr,
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "overtime",
-        record_id: overtime.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await overtime.update(
+        {
+          emp_id,
+          overtime_date,
+          start_time,
+          finish_time,
+          duration: durationStr,
+          updated_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(res, "Overtime updated successfully", overtime);
     } catch (err) {
@@ -303,15 +298,7 @@ module.exports = {
 
       if (!overtime) return response.notFound(res, "Overtime not found");
 
-      await overtime.destroy();
-
-      await logAudit({
-        table: "overtime",
-        record_id: id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await overtime.destroy({ where: {}, ...getRequestContext(req) });
       return response.success(res, "Overtime deleted successfully");
     } catch (err) {
       console.error(err);

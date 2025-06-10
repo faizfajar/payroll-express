@@ -1,6 +1,14 @@
 const { PayrollPeriod } = require("../models");
 const response = require("../helpers/response");
 
+function getRequestContext(req) {
+  return {
+    auditUserId: req.user ? req.user.id : null,
+    auditRequestId: req.request_id || null,
+    auditIpAddress: req.client_ip || null,
+  };
+}
+
 module.exports = {
   async index(req, res) {
     try {
@@ -33,7 +41,6 @@ module.exports = {
   async create(req, res) {
     try {
       const { period_name, type, start_date, finish_date } = req.body;
-       
 
       if (!period_name || !type || !start_date || !finish_date) {
         response.validationError(
@@ -42,23 +49,17 @@ module.exports = {
         );
       }
 
-      const data = await PayrollPeriod.create({
-        period_name,
-        type,
-        start_date,
-        finish_date,
-        created_at: new Date(),
-        created_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "payroll_period",
-        record_id: data.id,
-        action: "create",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      const data = await PayrollPeriod.create(
+        {
+          period_name,
+          type,
+          start_date,
+          finish_date,
+          created_at: new Date(),
+          created_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(
         res,
@@ -78,30 +79,24 @@ module.exports = {
       if (!data) return response.notFound(res, "Payroll period not found");
 
       const { period_name, type, start_date, finish_date } = req.body;
-       
+
       if (!period_name || !type || !start_date || !finish_date) {
         response.validationError(
           res,
           "Period Name, Start Date and End Date is required"
         );
       }
-      await data.update({
-        period_name,
-        type,
-        start_date,
-        finish_date,
-        updated_at: new Date(),
-        updated_by: req.user.emp_id,
-         
-      });
-
-      await logAudit({
-        table: "payroll_period",
-        record_id: data.id,
-        action: "update",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await data.update(
+        {
+          period_name,
+          type,
+          start_date,
+          finish_date,
+          updated_at: new Date(),
+          updated_by: req.user.emp_id,
+        },
+        { ...getRequestContext(req) }
+      );
 
       return response.success(res, "Payroll period updated successfully", data);
     } catch (err) {
@@ -114,15 +109,7 @@ module.exports = {
       const data = await PayrollPeriod.findByPk(req.params.id);
       if (!data) return response.notFound(res, "Payroll period not found");
 
-      await data.destroy();
-
-      await logAudit({
-        table: "payroll_period",
-        record_id: req.params.id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
+      await data.destroy({ where: {}, ...getRequestContext(req) });
 
       return response.success(
         res,
