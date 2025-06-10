@@ -75,7 +75,11 @@ module.exports = {
         return response.notFound(res, "No overtime found for this employee");
       }
 
-      return response.success(res,"Employee overtime data retrieved successfully",overtimes);
+      return response.success(
+        res,
+        "Employee overtime data retrieved successfully",
+        overtimes
+      );
     } catch (err) {
       console.error(err);
       return response.error(res, "Failed to retrieve employee overtime data");
@@ -233,28 +237,23 @@ module.exports = {
         return response.validationError(res, "Overtime cannot exceed 3 hours");
       }
 
-      const existing = await Overtime.findOne({
+      // Validasi overlap: selain ID ini
+      const overlapping = await Overtime.findOne({
         where: {
           emp_id,
           overtime_date,
-          id: { [Op.ne]: id }, // Exclude current record
-          [Op.or]: [
-            {
-              start_time: {
-                [Op.lt]: finish_time,
-              },
-              finish_time: {
-                [Op.gt]: start_time,
-              },
-            },
+          id: { [Op.ne]: id }, // exclude current ID
+          [Op.and]: [
+            { start_time: { [Op.lt]: finish_time } },
+            { finish_time: { [Op.gt]: start_time } },
           ],
         },
       });
 
-      if (existing) {
+      if (overlapping) {
         return response.validationError(
           res,
-          "Overtime overlaps with an existing request"
+          "Updated overtime overlaps with another request"
         );
       }
 
