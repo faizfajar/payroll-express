@@ -101,6 +101,13 @@ module.exports = {
         );
       }
 
+      // Delete existing mappings for this period
+      await PayrollPeriodEmployee.destroy({
+        where: { ppr_id },
+        ...getRequestContext(req),
+        individualHooks: true,
+      });
+
       // insert bulk
       const records = empIds.map((emp_id) => ({
         ppr_id,
