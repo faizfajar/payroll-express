@@ -35,26 +35,31 @@ Proyek ini adalah simulasi sistem penggajian (payslip) yang melibatkan komponen 
 
 ## 🔐 Authentication
 
-Gunakan login sederhana (username & password) menggunakan session/token-based auth (misalnya JWT atau session cookie).  
+Gunakan login sederhana (username & password) menggunakan session/token-based auth ( JWT )
 
 Roles:
-- **Admin**
-- **karyawan**
+- **admin**
+- **employee**
 
 ---
 
 ## 🚦 Step-by-Step Setup
 
-### 1. Clone Project
 ```bash
-git clone https://github.com/username/pt-deals-case-study.git
-cd pt-deals-case-study
+git clone https://github.com/faizfajar/payroll-express.git
+cd payroll-express
+npm install
+edit .env sesuaikan dengan database local -> example = database deals-salary-system
+migrate : npm run db:migrate
+seeder : npm run db:seed
+npm run dev
 
 ## 🚦 Step-by-Step testing
-1. 
-
 
 #  via jest.
+- buat database sesuai dengan isi dari .env DB_NAME_TEST
+- npx sequelize-cli db:migrate --env test
+- npx sequelize-cli db:seed:all --env test
 - npm run test -> ini untuk menjalankan seluruh file .test
 - npm run test {filename} -> ini untuk menjalankan spesifik file .test. example = npm run test overtime -> ini akan menjalankan hanya file overtime
 
@@ -65,7 +70,7 @@ cd pt-deals-case-study
 # Deals - Payroll System Docs.postman_collection -> v2.1
 
 # payroll-period
-# disclaimer, username yang bisa dugnakan adalah : 
+# disclaimer, username yang bisa digunakan adalah : 
 
 # username : admin // password : admin
 # username : employee1 sampai employee100 // password : password
