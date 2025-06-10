@@ -33,9 +33,13 @@ module.exports = {
   async create(req, res) {
     try {
       const { period_name, type, start_date, finish_date } = req.body;
-      
-      if(!period_name || !type || !start_date || !finish_date){
-        response.validationError(res, "Period Name, Start Date and End Date is required")
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+
+      if (!period_name || !type || !start_date || !finish_date) {
+        response.validationError(
+          res,
+          "Period Name, Start Date and End Date is required"
+        );
       }
 
       const data = await PayrollPeriod.create({
@@ -44,7 +48,8 @@ module.exports = {
         start_date,
         finish_date,
         created_at: new Date(),
-        updated_at: new Date(),
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
       return response.success(
         res,
@@ -63,9 +68,13 @@ module.exports = {
       const data = await PayrollPeriod.findByPk(req.params.id);
       if (!data) return response.notFound(res, "Payroll period not found");
 
-      const { period_name, type,  start_date, finish_date } = req.body;
-      if(!period_name || !type || !start_date || !finish_date){
-        response.validationError(res, "Period Name, Start Date and End Date is required")
+      const { period_name, type, start_date, finish_date } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+      if (!period_name || !type || !start_date || !finish_date) {
+        response.validationError(
+          res,
+          "Period Name, Start Date and End Date is required"
+        );
       }
       await data.update({
         period_name,
@@ -73,6 +82,8 @@ module.exports = {
         start_date,
         finish_date,
         updated_at: new Date(),
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(res, "Payroll period updated successfully", data);

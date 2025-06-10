@@ -112,6 +112,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, attendance_date, check_in, check_out } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!emp_id || !attendance_date) {
         return response.validationError(
@@ -138,6 +139,8 @@ module.exports = {
         check_in,
         check_out,
         duration,
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(
@@ -156,6 +159,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { attendance_date, check_in, check_out } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       const data = await Attendance.findByPk(id);
       if (!data) return response.notFound(res, "Attendance not found");
@@ -180,6 +184,8 @@ module.exports = {
         check_in: check_in ?? data.check_in,
         check_out: check_out ?? data.check_out,
         duration,
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(res, "Attendance updated successfully", data);

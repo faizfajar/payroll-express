@@ -89,6 +89,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, overtime_date, start_time, finish_time } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!emp_id || !overtime_date || !start_time || !finish_time) {
         return response.validationError(
@@ -169,6 +170,8 @@ module.exports = {
         start_time,
         finish_time,
         duration: durationStr,
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(
@@ -187,6 +190,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { emp_id, overtime_date, start_time, finish_time } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!emp_id || !overtime_date || !start_time || !finish_time) {
         return response.validationError(
@@ -265,6 +269,8 @@ module.exports = {
         start_time,
         finish_time,
         duration: durationStr,
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(res, "Overtime updated successfully", overtime);

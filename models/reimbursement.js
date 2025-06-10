@@ -33,8 +33,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       reimbursement_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: false,
       },
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER,
+      ip_address: DataTypes.STRING,
     },
     {
       sequelize,

@@ -20,6 +20,9 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
+      created_by: Sequelize.INTEGER,
+      updated_by: Sequelize.INTEGER,
+      ip_address: Sequelize.STRING,
     });
   },
 

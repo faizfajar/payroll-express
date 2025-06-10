@@ -32,6 +32,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { schedule_name, start_time, finish_time } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!schedule_name || !start_time || !finish_time) {
         return response.validationError(
@@ -43,7 +44,9 @@ module.exports = {
       const schedule = await Schedule.create({
         schedule_name,
         start_time,
-        finish_time
+        finish_time,
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(
@@ -62,6 +65,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { schedule_name, start_time, finish_time } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       const schedule = await Schedule.findByPk(id);
       if (!schedule) return response.notFound(res, "Schedule not found");
@@ -71,6 +75,8 @@ module.exports = {
         start_time,
         finish_time,
         updated_at: new Date(),
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(res, "Schedule updated successfully", schedule);

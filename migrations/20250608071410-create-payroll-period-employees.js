@@ -15,8 +15,8 @@ module.exports = {
           model: "payroll_period",
           key: "id",
         },
-        onUpdate: "CASCADE", 
-        onDelete: "SET NULL", 
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       emp_id: {
         type: Sequelize.INTEGER,
@@ -31,6 +31,9 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      created_by: Sequelize.INTEGER,
+      updated_by: Sequelize.INTEGER,
+      ip_address: Sequelize.STRING,
     });
   },
 

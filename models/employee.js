@@ -53,6 +53,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0,
       },
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER,
+      ip_address: DataTypes.STRING,
       // role: {
       //   type: DataTypes.STRING,
       //   allowNull: false,

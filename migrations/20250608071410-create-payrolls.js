@@ -54,6 +54,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("NOW"),
       },
+      created_by: Sequelize.INTEGER,
+      updated_by: Sequelize.INTEGER,
+      ip_address: Sequelize.STRING,
     });
   },
 

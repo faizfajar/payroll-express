@@ -16,6 +16,7 @@ dayjs.extend(durationPlugin);
 const runPayroll = async (req, res) => {
   try {
     const { ppr_id } = req.body;
+    const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
     if (!ppr_id) {
       return response.validationError(res, "Payroll period ID is required");
@@ -118,6 +119,8 @@ const runPayroll = async (req, res) => {
           overtimePay,
           reimbursement: totalReimbursement,
         },
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       payslipData.push(payslip);

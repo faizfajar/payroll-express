@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       start_time: DataTypes.TIME,
       finish_time: DataTypes.TIME,
       duration: DataTypes.TIME,
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER,
+      ip_address: DataTypes.STRING,
     },
     {
       sequelize,

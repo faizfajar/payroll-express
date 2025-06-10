@@ -42,6 +42,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { sce_id } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!sce_id) {
         return response.validationError(
@@ -50,7 +51,12 @@ module.exports = {
         );
       }
 
-      const employee = await Employee.create(req.body);
+
+      const employee = await Employee.create({
+        ...req.body,
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
+      });
       return response.success(
         res,
         "Employee created successfully",
@@ -67,6 +73,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { sce_id } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       const employee = await Employee.findByPk(id);
       if (!employee) return response.notFound(res, "Employee not found");
@@ -80,7 +87,11 @@ module.exports = {
         return response.validationError(res, "Schedule tidak ditemukan");
       }
 
-      await employee.update({ sce_id });
+      await employee.update({
+        ...req.body,
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
+      });
 
       return response.success(res, "Employee updated successfully", employee);
     } catch (err) {

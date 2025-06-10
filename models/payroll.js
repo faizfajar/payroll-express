@@ -53,6 +53,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSONB,
         allowNull: false,
       },
+      created_by: DataTypes.INTEGER,
+      updated_by: DataTypes.INTEGER,
+      ip_address: DataTypes.STRING,
     },
     {
       sequelize,

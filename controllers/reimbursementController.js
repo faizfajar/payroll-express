@@ -78,6 +78,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, description, ammount, reimbursement_date } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -91,6 +92,8 @@ module.exports = {
         description,
         ammount,
         reimbursement_date,
+        created_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(
@@ -112,6 +115,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { emp_id, description, ammount, reimbursement_date } = req.body;
+      const ipAddress = req.ip || req.headers["x-forwarded-for"];
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -122,13 +126,16 @@ module.exports = {
 
       const reimbursement = await Reimbursement.findByPk(id);
       if (!reimbursement)
-      return response.notFound(res, "Reimbursement not found");
+        return response.notFound(res, "Reimbursement not found");
 
       await reimbursement.update({
         emp_id,
         description,
         ammount,
         reimbursement_date,
+        updated_at: new Date(),
+        updated_by: req.user.emp_id,
+        ip_address: ipAddress,
       });
 
       return response.success(

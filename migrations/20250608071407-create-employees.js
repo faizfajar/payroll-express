@@ -32,6 +32,9 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      created_by: Sequelize.INTEGER,
+      updated_by: Sequelize.INTEGER,
+      ip_address: Sequelize.STRING,
     });
   },
 

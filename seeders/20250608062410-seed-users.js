@@ -26,6 +26,7 @@ module.exports = {
       username: "admin",
       password: await bcrypt.hash("admin", 10),
       role: "admin",
+      emp_id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
