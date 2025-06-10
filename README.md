@@ -53,7 +53,8 @@ git clone https://github.com/faizfajar/payroll-express.git
 cd payroll-express
 npm install
 
-# Konfigurasi .env (lihat .env.example)
+# Konfigurasi .env (lihat env.example)
+cp env.example .env
 # Sesuaikan nama database (contoh: deals-salary-system)
 
 # Migrasi dan seed data
@@ -85,7 +86,7 @@ npm run test {filename}
 
 ### Via Postman
 
-1. Import file koleksi Postman: `Deals - Payroll System Docs.postman_collection` (v2.1)
+1. Import file koleksi Postman: `Payroll System Docs.postman_collection` (v2.1)
 2. Login menggunakan akun berikut:
 
    * admin / admin
