@@ -16,6 +16,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
+      ip_address: Sequelize.STRING,
     });
   },
   down: async (queryInterface, Sequelize) => {

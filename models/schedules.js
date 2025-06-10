@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       created_by: DataTypes.INTEGER,
       updated_by: DataTypes.INTEGER,
-      ip_address: DataTypes.STRING,
+       
     },
     {
       sequelize,

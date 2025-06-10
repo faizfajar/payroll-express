@@ -38,7 +38,7 @@ module.exports = {
       },
       created_by: Sequelize.INTEGER,
       updated_by: Sequelize.INTEGER,
-      ip_address: Sequelize.STRING,
+       
     });
   },
 

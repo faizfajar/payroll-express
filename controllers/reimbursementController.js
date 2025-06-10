@@ -78,7 +78,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { emp_id, description, ammount, reimbursement_date } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -93,7 +93,7 @@ module.exports = {
         ammount,
         reimbursement_date,
         created_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       });
 
       await logAudit({
@@ -123,7 +123,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { emp_id, description, ammount, reimbursement_date } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
 
       if (!emp_id || !reimbursement_date || (!ammount && ammount != 0)) {
         return response.validationError(
@@ -143,7 +143,7 @@ module.exports = {
         reimbursement_date,
         updated_at: new Date(),
         updated_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       });
 
       await logAudit({

@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       is_processed: DataTypes.BOOLEAN,
       created_by: DataTypes.INTEGER,
       updated_by: DataTypes.INTEGER,
-      ip_address: DataTypes.STRING,
+       
     },
     {
       sequelize,

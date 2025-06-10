@@ -33,7 +33,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { period_name, type, start_date, finish_date } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
 
       if (!period_name || !type || !start_date || !finish_date) {
         response.validationError(
@@ -49,7 +49,7 @@ module.exports = {
         finish_date,
         created_at: new Date(),
         created_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       });
 
       await logAudit({
@@ -78,7 +78,7 @@ module.exports = {
       if (!data) return response.notFound(res, "Payroll period not found");
 
       const { period_name, type, start_date, finish_date } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
       if (!period_name || !type || !start_date || !finish_date) {
         response.validationError(
           res,
@@ -92,7 +92,7 @@ module.exports = {
         finish_date,
         updated_at: new Date(),
         updated_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       });
 
       await logAudit({

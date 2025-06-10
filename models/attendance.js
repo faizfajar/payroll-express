@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       duration: DataTypes.TIME,
       created_by: DataTypes.INTEGER,
       updated_by: DataTypes.INTEGER,
-      ip_address: DataTypes.STRING,
+       
     },
     {
       sequelize,

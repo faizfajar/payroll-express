@@ -79,7 +79,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { ppr_id, emp_id } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
 
       // set empId to array if params is string
       let empIds = emp_id;
@@ -99,7 +99,7 @@ module.exports = {
         ppr_id,
         emp_id,
         created_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       }));
 
       const data = await PayrollPeriodEmployee.bulkCreate(records);
@@ -123,7 +123,7 @@ module.exports = {
     try {
       const { ppr_id } = req.params;
       const { emp_id } = req.body;
-      const ipAddress = req.ip || req.headers["x-forwarded-for"];
+       
 
       if (!ppr_id) {
         return response.validationError(res, "Payroll Period ID is required");
@@ -147,7 +147,7 @@ module.exports = {
         emp_id: id,
         created_by: req.user.emp_id,
         updated_by: req.user.emp_id,
-        ip_address: ipAddress,
+         
       }));
 
       const created = await PayrollPeriodEmployee.bulkCreate(newMappings);
