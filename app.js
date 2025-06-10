@@ -29,7 +29,6 @@ app.set("trust proxy", true);
 
 // Assign request_id and clientIp for every request
 app.use((req, res, next) => {
-  req.clientIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "::1";
   req.request_id = uuidv4();
   next();
 });
@@ -37,7 +36,7 @@ app.use((req, res, next) => {
 // Optional logging middleware
 app.use((req, res, next) => {
   console.log(
-    `[${req.request_id}] ${req.method} ${req.originalUrl} from ${req.clientIp}`
+    `[${req.request_id}] ${req.method} ${req.originalUrl}`
   );
   next();
 });
