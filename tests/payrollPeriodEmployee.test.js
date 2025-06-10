@@ -8,7 +8,7 @@ const {
 } = require("../models");
 
 let recordId;
-let ppr_id = 5;
+let ppr_id = 1;
 describe("PayrollPeriodEmployeeController", () => {
 
   it("should create payroll period employee records", async () => {

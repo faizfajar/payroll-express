@@ -186,14 +186,6 @@ module.exports = {
       }
 
       await data.destroy({ where: {}, ...getRequestContext(req) });
-
-      await logAudit({
-        table: "payroll_period_employee",
-        record_id: data.id,
-        action: "delete",
-        user_id: req.user.id,
-        request_id: req.request_id,
-      });
       return response.success(
         res,
         "Payroll period employee deleted successfully"
