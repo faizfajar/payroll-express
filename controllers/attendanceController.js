@@ -71,7 +71,7 @@ module.exports = {
 
       if (!emp_id || !start || !finish) {
         return res.status(400).json({
-          success: false,
+          status: false,
           message: "emp_id, start, and finish are required",
         });
       }
@@ -89,7 +89,7 @@ module.exports = {
       });
 
       return res.status(200).json({
-        success: true,
+        status: true,
         message: "Attendance summary retrieved successfully",
         data: [
           {
@@ -103,7 +103,7 @@ module.exports = {
     } catch (err) {
       console.error("Error in getEmployeeAttendanceByRange:", err);
       return res.status(500).json({
-        success: false,
+        status: false,
         message: "Failed to fetch attendance summary",
       });
     }
