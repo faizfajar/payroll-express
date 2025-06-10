@@ -103,7 +103,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/payroll-periods/1",
+							"raw": "localhost:3000/api/payroll-periods/2",
 							"host": [
 								"localhost"
 							],
@@ -111,7 +111,7 @@
 							"path": [
 								"api",
 								"payroll-periods",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -133,7 +133,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/payroll-periods/1",
+							"raw": "localhost:3000/api/payroll-periods/2",
 							"host": [
 								"localhost"
 							],
@@ -141,7 +141,7 @@
 							"path": [
 								"api",
 								"payroll-periods",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -299,7 +299,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"ppr_id\": \"1\",\n    \"emp_id\": [1,2,3,4,5]\n    \n}",
+							"raw": "{\n    \"ppr_id\": 1,\n    \"emp_id\": [1,2,3,4]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -372,7 +372,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/employees/100",
+							"raw": "localhost:3000/api/employees/102",
 							"host": [
 								"localhost"
 							],
@@ -380,7 +380,7 @@
 							"path": [
 								"api",
 								"employees",
-								"100"
+								"102"
 							]
 						}
 					},
@@ -480,7 +480,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/employees/101",
+							"raw": "localhost:3000/api/employees/122",
 							"host": [
 								"localhost"
 							],
@@ -488,7 +488,7 @@
 							"path": [
 								"api",
 								"employees",
-								"101"
+								"122"
 							]
 						}
 					},
@@ -510,7 +510,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/employees/101",
+							"raw": "localhost:3000/api/employees/122",
 							"host": [
 								"localhost"
 							],
@@ -518,7 +518,7 @@
 							"path": [
 								"api",
 								"employees",
-								"101"
+								"122"
 							]
 						}
 					},
@@ -653,7 +653,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/schedules/2",
+							"raw": "localhost:3000/api/schedules/3",
 							"host": [
 								"localhost"
 							],
@@ -661,7 +661,7 @@
 							"path": [
 								"api",
 								"schedules",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -683,7 +683,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/schedules/2",
+							"raw": "localhost:3000/api/schedules/3",
 							"host": [
 								"localhost"
 							],
@@ -691,7 +691,7 @@
 							"path": [
 								"api",
 								"schedules",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -857,7 +857,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/overtimes/9",
+							"raw": "localhost:3000/api/overtimes/1",
 							"host": [
 								"localhost"
 							],
@@ -865,7 +865,7 @@
 							"path": [
 								"api",
 								"overtimes",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -887,7 +887,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/overtimes/4",
+							"raw": "localhost:3000/api/overtimes/1",
 							"host": [
 								"localhost"
 							],
@@ -895,7 +895,7 @@
 							"path": [
 								"api",
 								"overtimes",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -1290,7 +1290,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"emp_id\": 2,\n    \"attendance_date\": \"2025-06-14\",\n    \"check_in\": \"09:00\",\n    \"check_out\": \"17:00\"\n}",
+							"raw": "{\n    \"emp_id\": 2,\n    \"attendance_date\": \"2025-06-13\",\n    \"check_in\": \"09:00\",\n    \"check_out\": \"17:00\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1298,7 +1298,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/attendances/14",
+							"raw": "localhost:3000/api/attendances/2",
 							"host": [
 								"localhost"
 							],
@@ -1306,7 +1306,7 @@
 							"path": [
 								"api",
 								"attendances",
-								"14"
+								"2"
 							]
 						}
 					},
@@ -1483,7 +1483,7 @@
 	"variable": [
 		{
 			"key": "TOKEN",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAxLCJuYW1lIjoiQWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIiwiZW1wX2lkIjoyLCJpYXQiOjE3NDk0ODY0NzUsImV4cCI6MTc0OTU3Mjg3NX0.6EzG4sv26ytdHeJBG4vOs2L4WLs6rsxhLKOgOhN2o8w",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAxLCJuYW1lIjoiQWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIiwiZW1wX2lkIjoxLCJpYXQiOjE3NDk1NzI5NjcsImV4cCI6MTc0OTY1OTM2N30.u-5pXJK4qt3PzMp2vKkpRDz5B0Q5PsY9DAp94B_YE1Q",
 			"type": "string"
 		}
 	]
