@@ -55,7 +55,7 @@ npm install
 
 # Konfigurasi .env (lihat env.example)
 cp env.example .env
-# Sesuaikan nama database (contoh: deals-salary-system)
+# Sesuaikan nama database (contoh: salary-system)
 
 # Migrasi dan seed data
 db:migrate: npm run db:migrate

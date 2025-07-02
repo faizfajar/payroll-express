@@ -1,4 +1,4 @@
-const { Employee, Schedule } = require("../models");
+const { Employee, Schedule, sequelize } = require("../models");
 const response = require("../helpers/response");
 
 function getRequestContext(req) {
@@ -48,23 +48,30 @@ module.exports = {
   },
 
   async create(req, res) {
+    const t = await sequelize.transaction();
     try {
       const { sce_id } = req.body;
 
       if (!sce_id) {
+        await t.rollback();
         return response.validationError(
           res,
           "Anda harus memasukkan schedule di employee ini"
         );
       }
 
+      const employee = await Employee.create(
+        {
+          ...req.body,
+          created_by: req.user.emp_id,
+        },
+        {
+          ...getRequestContext(req),
+          transaction: t,
+        }
+      );
 
-      const employee = await Employee.create({
-        ...req.body,
-        created_by: req.user.emp_id,
-      },{
-        ...getRequestContext(req)
-      });
+      await t.commit();
 
       return response.success(
         res,
@@ -73,26 +80,34 @@ module.exports = {
         201
       );
     } catch (err) {
+      await t.rollback();
       console.error(err);
       return response.validationError(res, err.message);
     }
   },
 
   async update(req, res) {
+    const { id } = req.params;
+    const { sce_id } = req.body;
+
+    if (!sce_id) {
+      return response.validationError(
+        res,
+        "Anda harus memasukkan schedule (sce_id)"
+      );
+    }
+
+    const t = await sequelize.transaction();
     try {
-      const { id } = req.params;
-      const { sce_id } = req.body;
-       
-
-      const employee = await Employee.findByPk(id);
-      if (!employee) return response.notFound(res, "Employee not found");
-
-      if (!sce_id) {
-        return response.validationError(res, "Anda harus memasukkan schedule (sce_id)");
+      const employee = await Employee.findByPk(id, { transaction: t });
+      if (!employee) {
+        await t.rollback();
+        return response.notFound(res, "Employee not found");
       }
 
-      const schedule = await Schedule.findByPk(sce_id);
+      const schedule = await Schedule.findByPk(sce_id, { transaction: t });
       if (!schedule) {
+        await t.rollback();
         return response.validationError(res, "Schedule tidak ditemukan");
       }
 
@@ -103,27 +118,40 @@ module.exports = {
         },
         {
           ...getRequestContext(req),
+          transaction: t,
         }
       );
 
+      await t.commit();
       return response.success(res, "Employee updated successfully", employee);
     } catch (err) {
+      await t.rollback();
       console.error(err);
-      return response.validationError(res, err.message);
+      return response.error(res, "Gagal memperbarui data employee");
     }
   },
 
   async delete(req, res) {
+    const { id } = req.params;
+
+    const t = await sequelize.transaction();
     try {
-      const { id } = req.params;
-      const employee = await Employee.findByPk(id);
-      if (!employee) return response.notFound(res, "Employee not found");
+      const employee = await Employee.findByPk(id, { transaction: t });
+
+      if (!employee) {
+        await t.rollback();
+        return response.notFound(res, "Employee not found");
+      }
+
       await employee.destroy({
-        where: {},
         ...getRequestContext(req),
+        transaction: t,
       });
+
+      await t.commit();
       return response.success(res, "Employee deleted successfully", null);
     } catch (err) {
+      await t.rollback();
       console.error(err);
       return response.error(res, "Failed to delete employee");
     }
